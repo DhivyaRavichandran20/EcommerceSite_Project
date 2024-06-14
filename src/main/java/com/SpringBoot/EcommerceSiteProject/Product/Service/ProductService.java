@@ -24,11 +24,11 @@ public class ProductService {
         product.setCategory(category);
 
         Product products = new Product();
-        products.setProduct_id(product.getProduct_id());
+        products.setId(product.getId());
         products.setProduct_Name(product.getProduct_Name());
         products.setPrice(product.getPrice());
         products.setDescription(product.getDescription());
-        products.setGst(product.getGst());
+        products.setGstPercentage(product.getGstPercentage());
         products.setCategory(category);
 
         return productRepository.save(product);
@@ -57,7 +57,7 @@ public class ProductService {
             oldProduct.setProduct_Name(updatedProduct.getProduct_Name());
             oldProduct.setDescription(updatedProduct.getDescription());
             oldProduct.setPrice(updatedProduct.getPrice());
-            oldProduct.setGst(updatedProduct.getGst());
+            oldProduct.setGstPercentage(updatedProduct.getGstPercentage());
             //product.setCategory(category);
             productRepository.save(oldProduct);
         }else{

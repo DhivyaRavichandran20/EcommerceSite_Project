@@ -27,6 +27,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Address> addresses;
 
+    @OneToOne(mappedBy = "user",cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+    private Cart cart;
+
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
+
+
     public User(){
 
     }
