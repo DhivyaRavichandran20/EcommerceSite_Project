@@ -1,9 +1,12 @@
 package com.SpringBoot.EcommerceSiteProject.Product.Service;
 
+import com.SpringBoot.EcommerceSiteProject.DTO.ProductDTO;
 import com.SpringBoot.EcommerceSiteProject.Model.Category;
 import com.SpringBoot.EcommerceSiteProject.Model.Product;
+import com.SpringBoot.EcommerceSiteProject.Model.User;
 import com.SpringBoot.EcommerceSiteProject.Product.Repository.CategoryRepository;
 import com.SpringBoot.EcommerceSiteProject.Product.Repository.ProductRepository;
+import com.SpringBoot.EcommerceSiteProject.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +22,19 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Product addProduct(Product product) throws Exception  {
-        Category category = categoryRepository.findById(product.getCategoryId()).orElseThrow(() -> new Exception("Category not found"));
+    @Autowired
+    private UserRepository userRepository;
+
+    public Product addProduct(ProductDTO productDTO) throws Exception {
+
+        Product product = productDTO.getProduct();
+        Category category = categoryRepository.findById(productDTO.getTempCategoryId()).orElse(new Category());
         product.setCategory(category);
-
-        Product products = new Product();
-        products.setId(product.getId());
-        products.setProduct_Name(product.getProduct_Name());
-        products.setPrice(product.getPrice());
-        products.setDescription(product.getDescription());
-        products.setGstPercentage(product.getGstPercentage());
-        products.setCategory(category);
-
+        User user = userRepository.findById(productDTO.getTemporaryUserId()).orElse(new User());
+        product.setUser(user);
         return productRepository.save(product);
-
     }
+
 
     public List<Product> getAllProduct() {
         return productRepository.findAll();
@@ -58,14 +59,17 @@ public class ProductService {
             oldProduct.setDescription(updatedProduct.getDescription());
             oldProduct.setPrice(updatedProduct.getPrice());
             oldProduct.setGstPercentage(updatedProduct.getGstPercentage());
-            //product.setCategory(category);
+
+            Category category = categoryRepository.findById(updatedProduct.getTempCategoryId()).orElseThrow(() -> new Exception("Category not found"));
+            oldProduct.setCategory(category);
+
             productRepository.save(oldProduct);
         }else{
-            throw new Exception("Address Not Found");
+            throw new Exception("Product Not Found");
         }
 
-        Category category = categoryRepository.findById(updatedProduct.getCategoryId()).orElseThrow(() -> new Exception("Category not found"));
-        updatedProduct.setCategory(category);
+      //  Category category = categoryRepository.findById(updatedProduct.getTempCategoryId()).orElseThrow(() -> new Exception("Category not found"));
+       // updatedProduct.setCategory(category);
 
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
@@ -29,7 +30,7 @@ public class CartService {
     @Transactional
     public void addToCart(CartDTO cartDTO) throws Exception {
 
-        Long userId = cartDTO.getCart().getUserId();
+        Long userId   = cartDTO.getCart().getTempUserId();
 
         User user = userRepository.findById(userId).orElseThrow( () -> new Exception("User does not exists"));
 
@@ -71,4 +72,34 @@ public class CartService {
 
     }
 
-}
+    public Cart getCartById(Integer id) throws Exception {
+        Optional<Cart> cart = cartRepository.findById(id);
+        return cart.orElseThrow(() -> new RuntimeException("Cart not found"));
+    }
+
+    public Cart updateCart(Integer cartId, CartItem cartItem) throws Exception {
+        Cart cart = getCartById(cartId);
+        Optional<CartItem> existingItem = cart.getCartItem().stream()
+                .filter(item -> item.getTempProductId().equals(cartItem.getTempProductId()))
+                .findFirst();
+
+        if (existingItem.isPresent()) {
+            existingItem.get().setQuantity(cartItem.getQuantity());
+        } else {
+            cart.getCartItem().add(cartItem);
+        }
+
+        Product product = productRepository.findById(cartItem.getTempProductId()).orElseThrow(() -> new Exception("Product not found"));
+        cartItem.setProduct(product);
+
+        return cartRepository.save(cart);
+    }
+
+    public void removeItemFromCart(Integer id, Integer productId) throws Exception {
+
+            Cart cart = getCartById(id);
+            cart.getCartItem().removeIf(item -> item.getTempProductId().equals(productId));
+            cartRepository.save(cart);
+        }
+    }
+

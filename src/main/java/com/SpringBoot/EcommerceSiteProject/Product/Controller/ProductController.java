@@ -8,10 +8,13 @@ import com.SpringBoot.EcommerceSiteProject.Model.Product;
 import com.SpringBoot.EcommerceSiteProject.Product.Repository.CategoryRepository;
 import com.SpringBoot.EcommerceSiteProject.Product.Service.CategoryService;
 import com.SpringBoot.EcommerceSiteProject.Product.Service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,8 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    //private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -40,8 +45,15 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) throws Exception {
-        return ResponseEntity.ok(productService.addProduct(product));
+    public ResponseEntity<Product> addProduct(@RequestBody ProductDTO productDTO) throws Exception {
+        try {
+            productService.addProduct(productDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "User does not exist", e);
+        }
+        return ResponseEntity.ok(productService.addProduct(productDTO));
     }
 
     @PutMapping("/{id}")
@@ -57,14 +69,7 @@ public class ProductController {
     }
 
 
-    /*Optional<Product> product1 = productService.getProductById(id);
-    if(product1.isPresent()){
 
-        Product updatedProduct = product1.get();
-        updatedProduct.setProduct_id();
-
-    }
-    }*/
 }
 
 

@@ -26,7 +26,7 @@ public class Cart {
     private User user;
 
     @Transient
-    private Long userId;
+   private Long tempUserId;
 
     @OneToMany(mappedBy = "cart",cascade = { CascadeType.PERSIST,CascadeType.MERGE},orphanRemoval = true)
     private List<CartItem> cartItem = new ArrayList<>();

@@ -28,7 +28,7 @@ public class CartItem {
     private Product product;
 
     @Transient
-    private Integer product_id;
+    private Integer tempProductId;
 
     private Integer quantity;
     private double gstAmount;

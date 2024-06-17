@@ -33,9 +33,7 @@ public class Product {
     private Category category;
 
     @Transient
-    private Integer categoryId;
-
-
+    private Integer tempCategoryId;
 
     @OneToMany(mappedBy = "product",cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.EAGER)
     private List<CartItem> products = new ArrayList<>();
@@ -44,5 +42,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
+
+    @Transient
+    private Long temporaryUserId;
 
 }
