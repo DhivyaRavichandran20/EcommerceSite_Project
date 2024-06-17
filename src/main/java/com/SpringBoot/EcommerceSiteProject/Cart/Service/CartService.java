@@ -49,8 +49,15 @@ public class CartService {
         cartItem.setProduct(product);
         cartItem.setQuantity(quantity);
         cartItem.setProductPrice(product.getPrice());
+        calculateTotal(cartItem, cart, product);
 
-        double itemTotal = quantity * product.getPrice();
+
+    }
+
+    private void calculateTotal(CartItem cartItem, Cart cart, Product product) {
+
+
+        double itemTotal = cartItem.getQuantity() * product.getPrice();
         double gstAmount = itemTotal * (product.getGstPercentage() / 100 ) ;
         cartItem.setItemTotal(itemTotal);
         cartItem.setGstAmount(gstAmount);
@@ -68,8 +75,6 @@ public class CartService {
         cart.setTotalAmountWithGST(finalTotalWithGst);
 
         cartRepository.save(cart);
-
-
     }
 
     public Cart getCartById(Integer id) throws Exception {
@@ -79,18 +84,22 @@ public class CartService {
 
     public Cart updateCart(Integer cartId, CartItem cartItem) throws Exception {
         Cart cart = getCartById(cartId);
-        Optional<CartItem> existingItem = cart.getCartItem().stream()
+        Optional<CartItem> maybeExistingItem = cart.getCartItem().stream()
                 .filter(item -> item.getTempProductId().equals(cartItem.getTempProductId()))
                 .findFirst();
 
-        if (existingItem.isPresent()) {
-            existingItem.get().setQuantity(cartItem.getQuantity());
+        CartItem existingItem;
+
+        if (maybeExistingItem.isPresent()) {
+            existingItem = maybeExistingItem.get();
+            existingItem.setQuantity(cartItem.getQuantity());
         } else {
-            cart.getCartItem().add(cartItem);
+            throw new Exception("Cart Item Not Found");
         }
 
         Product product = productRepository.findById(cartItem.getTempProductId()).orElseThrow(() -> new Exception("Product not found"));
-        cartItem.setProduct(product);
+
+        calculateTotal(existingItem, cart, product);
 
         return cartRepository.save(cart);
     }
