@@ -6,34 +6,34 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name="carts")
-public class Cart {
+@Table(name="order")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "user_id",nullable=false)
     private User user;
 
     @Transient
-    private Long tempUserId;
+    private Long tempsUserId;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "cart",cascade = { CascadeType.PERSIST,CascadeType.MERGE},orphanRemoval = true)
-    private List<CartItem> cartItem = new ArrayList<>();
+    private Date createdDate;
+    private Double orderTotal;
+    private String orderStatus;
 
-    private Double totalPrice = 0.0;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
 
-    private Double gstAmount = 0.0;
 
-    private Double totalAmountWithGST = 0.0;
 }

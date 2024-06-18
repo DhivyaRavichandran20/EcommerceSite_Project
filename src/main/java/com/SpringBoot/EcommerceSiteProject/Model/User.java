@@ -1,5 +1,6 @@
 package com.SpringBoot.EcommerceSiteProject.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,12 +28,16 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Address> addresses;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user",cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
     private Cart cart;
 
     @OneToMany(mappedBy = "user")
     private List<Product> products;
 
+
+    @OneToMany(mappedBy = "user",cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+    private Order order;
 
     public User(){
 

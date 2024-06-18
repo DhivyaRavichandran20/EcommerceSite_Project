@@ -68,8 +68,7 @@ public class ProductService {
             throw new Exception("Product Not Found");
         }
 
-      //  Category category = categoryRepository.findById(updatedProduct.getTempCategoryId()).orElseThrow(() -> new Exception("Category not found"));
-       // updatedProduct.setCategory(category);
+
 
     }
 }

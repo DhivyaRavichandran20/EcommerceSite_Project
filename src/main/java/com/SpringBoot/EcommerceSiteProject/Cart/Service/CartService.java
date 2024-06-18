@@ -2,6 +2,7 @@ package com.SpringBoot.EcommerceSiteProject.Cart.Service;
 
 import com.SpringBoot.EcommerceSiteProject.Cart.Repository.CartItemRepository;
 import com.SpringBoot.EcommerceSiteProject.Cart.Repository.CartRepository;
+import com.SpringBoot.EcommerceSiteProject.DTO.CartDTO;
 import com.SpringBoot.EcommerceSiteProject.Model.*;
 import com.SpringBoot.EcommerceSiteProject.Product.Repository.ProductRepository;
 import com.SpringBoot.EcommerceSiteProject.User.UserRepository;
@@ -30,9 +31,9 @@ public class CartService {
     @Transactional
     public void addToCart(CartDTO cartDTO) throws Exception {
 
-        Long userId   = cartDTO.getCart().getTempUserId();
+        Long userId = cartDTO.getCart().getTempUserId();
 
-        User user = userRepository.findById(userId).orElseThrow( () -> new Exception("User does not exists"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception("User does not exists"));
 
         Cart cart = cartRepository.findByUserId(userId).orElse(new Cart());
 
@@ -40,7 +41,7 @@ public class CartService {
 
         cart = cartRepository.save(cart);
 
-        Product product = productRepository.findByUserId(userId).orElseThrow( () -> new Exception("Product does not exists"));
+        Product product = productRepository.findByUserId(userId).orElseThrow(() -> new Exception("Product does not exists"));
 
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), product.getId()).orElse(new CartItem());
 
@@ -51,6 +52,7 @@ public class CartService {
         cartItem.setProductPrice(product.getPrice());
         calculateTotal(cartItem, cart, product);
 
+        cartRepository.save(cart);
 
     }
 
@@ -58,7 +60,7 @@ public class CartService {
 
 
         double itemTotal = cartItem.getQuantity() * product.getPrice();
-        double gstAmount = itemTotal * (product.getGstPercentage() / 100 ) ;
+        double gstAmount = itemTotal * (product.getGstPercentage() / 100);
         cartItem.setItemTotal(itemTotal);
         cartItem.setGstAmount(gstAmount);
 
@@ -74,7 +76,6 @@ public class CartService {
         cart.setGstAmount(gstTotal);
         cart.setTotalAmountWithGST(finalTotalWithGst);
 
-        cartRepository.save(cart);
     }
 
     public Cart getCartById(Integer id) throws Exception {
@@ -84,31 +85,30 @@ public class CartService {
 
     public Cart updateCart(Integer cartId, CartItem cartItem) throws Exception {
         Cart cart = getCartById(cartId);
-        Optional<CartItem> maybeExistingItem = cart.getCartItem().stream()
-                .filter(item -> item.getTempProductId().equals(cartItem.getTempProductId()))
-                .findFirst();
 
-        CartItem existingItem;
+        CartItem existingItem = cartItemRepository.findByCartIdAndProductId(cart.getId(),
+                cartItem.getTempProductId()).orElseThrow(() -> new Exception("cart item not found"));
 
-        if (maybeExistingItem.isPresent()) {
-            existingItem = maybeExistingItem.get();
-            existingItem.setQuantity(cartItem.getQuantity());
-        } else {
-            throw new Exception("Cart Item Not Found");
-        }
+        Product product = productRepository.findById(cartItem.getTempProductId())
+                .orElseThrow(() -> new Exception("Product not found"));
 
-        Product product = productRepository.findById(cartItem.getTempProductId()).orElseThrow(() -> new Exception("Product not found"));
+        existingItem.setQuantity(cartItem.getQuantity());
+        existingItem.setProductPrice(product.getPrice());
 
         calculateTotal(existingItem, cart, product);
 
         return cartRepository.save(cart);
     }
 
-    public void removeItemFromCart(Integer id, Integer productId) throws Exception {
+  /*  public void removeItemFromCart(Integer id) throws Exception {
 
-            Cart cart = getCartById(id);
-            cart.getCartItem().removeIf(item -> item.getTempProductId().equals(productId));
-            cartRepository.save(cart);
+        boolean cartExist = cartRepository.existsById(id);
+        if(cartExist){
+            cartRepository.deleteById(id);
         }
-    }
+
+
+
+    }*/
+}
 

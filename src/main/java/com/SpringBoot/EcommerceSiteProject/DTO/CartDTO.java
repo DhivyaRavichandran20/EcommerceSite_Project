@@ -1,12 +1,10 @@
-package com.SpringBoot.EcommerceSiteProject.Model;
+package com.SpringBoot.EcommerceSiteProject.DTO;
 
-import jakarta.persistence.*;
+import com.SpringBoot.EcommerceSiteProject.Model.Cart;
+import com.SpringBoot.EcommerceSiteProject.Model.CartItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
