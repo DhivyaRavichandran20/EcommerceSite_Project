@@ -4,6 +4,7 @@ import com.SpringBoot.EcommerceSiteProject.Cart.Service.CartService;
 import com.SpringBoot.EcommerceSiteProject.Model.Cart;
 import com.SpringBoot.EcommerceSiteProject.DTO.CartDTO;
 import com.SpringBoot.EcommerceSiteProject.Model.CartItem;
+import com.SpringBoot.EcommerceSiteProject.Model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,10 @@ public class CartController {
         return ResponseEntity.ok("delete success");
 
     }*/
+    @PostMapping("/checkout")
+    public CartDTO createOrder(@RequestBody CartDTO cartDTO, @RequestParam Long userId) throws Exception {
+        return cartService.createOrder(userId);
+    }
 
 
 }

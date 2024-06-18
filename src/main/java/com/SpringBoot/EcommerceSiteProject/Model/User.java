@@ -37,7 +37,7 @@ public class User {
 
 
     @OneToMany(mappedBy = "user",cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
-    private Order order;
+    private List<Order> order;
 
     public User(){
 

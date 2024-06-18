@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,6 +99,31 @@ public class CartService {
         calculateTotal(existingItem, cart, product);
 
         return cartRepository.save(cart);
+    }
+
+    public CartDTO createOrder(Long userId) throws Exception {
+        Cart cart = getCartById(Math.toIntExact(userId));
+
+       // Step 1 - Create Order
+
+       // orderService.createOrder(cart)
+        //Order order =  Order.builder().orderStatus("PENDING").orderTotal(cart.getTotalPrice()).build();
+       /* List<OrderItem> orderItems = new ArrayList<>();
+        for(CartItem items: cart.getCartItem()){
+            OrderItem orderItem = OrderItem.builder().order(order).itemTotal(items.getItemTotal()).product(items.getProduct())
+                    .build();
+            orderItems.add(orderItem);
+        }
+        orderitemrepo.saveALl(orderItems);*/
+
+        //Step 2 - Create payment
+
+        //Step 3 - Update payment to completed
+
+        //Step 4 - Delete Cart Items
+
+
+
     }
 
   /*  public void removeItemFromCart(Integer id) throws Exception {

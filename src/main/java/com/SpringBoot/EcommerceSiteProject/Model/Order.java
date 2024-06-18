@@ -3,9 +3,11 @@ package com.SpringBoot.EcommerceSiteProject.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="order")
+@Builder
+@Table(name="orders")
 public class Order {
 
     @Id
@@ -32,8 +35,10 @@ public class Order {
     private Double orderTotal;
     private String orderStatus;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    @JsonIgnore
+    @OneToMany(mappedBy = "order",cascade = { CascadeType.PERSIST,CascadeType.MERGE},orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
+
 
 
 }

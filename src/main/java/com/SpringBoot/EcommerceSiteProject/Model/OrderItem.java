@@ -3,6 +3,7 @@ package com.SpringBoot.EcommerceSiteProject.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="OrderItems")
+@Builder
+@Table(name="orderItems")
 public class OrderItem {
 
     @Id
@@ -19,11 +21,11 @@ public class OrderItem {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id",nullable = false)
     private Order order;
 
     @Transient
-    private Integer orderId;
+    private Integer tempOrderId;
 
     @JsonIgnore
     @ManyToOne
