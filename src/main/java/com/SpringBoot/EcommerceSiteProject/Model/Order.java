@@ -34,6 +34,9 @@ public class Order {
     private Date createdDate;
     private Double orderTotal;
     private String orderStatus;
+    private Double gstAmount ;
+
+    private Double totalAmountWithGST ;
 
     @JsonIgnore
     @OneToMany(mappedBy = "order",cascade = { CascadeType.PERSIST,CascadeType.MERGE},orphanRemoval = true)

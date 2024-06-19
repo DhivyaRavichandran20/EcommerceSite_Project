@@ -41,6 +41,11 @@ public class CartController {
         return cartService.updateCart(id, cartItem);
     }
 
+    @DeleteMapping("/item/{cartItemId}")
+    public void deleteCartItem(@PathVariable Integer cartItemId) throws Exception {
+         cartService.deleteCartItem(cartItemId);
+    }
+
    /* @DeleteMapping("/{id}")
 
     public ResponseEntity<String> removeItemFromCart(@PathVariable Integer id) throws Exception {
@@ -49,8 +54,13 @@ public class CartController {
 
     }*/
     @PostMapping("/checkout")
-    public CartDTO createOrder(@RequestBody CartDTO cartDTO, @RequestParam Long userId) throws Exception {
-        return cartService.createOrder(userId);
+    public String createOrder(@RequestParam Long userId, @RequestParam boolean payment) throws Exception {
+        cartService.createOrder(userId);
+        return  "success";
+
+    //public ResponseEntity<Order> createOrder(@PathVariable Long userId ) {
+       // Order order = cartService.createOrder(userId);
+       // return ResponseEntity.ok(order);
     }
 
 

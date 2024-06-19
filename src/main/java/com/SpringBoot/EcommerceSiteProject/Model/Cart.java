@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name="carts")
-public class Cart {
+public class    Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +33,8 @@ public class Cart {
     private List<CartItem> cartItem = new ArrayList<>();
 
     private Double totalPrice = 0.0;
+
+    private Date createdDate;
 
     private Double gstAmount = 0.0;
 

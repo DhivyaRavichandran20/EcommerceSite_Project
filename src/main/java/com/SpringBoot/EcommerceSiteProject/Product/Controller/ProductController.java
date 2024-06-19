@@ -1,15 +1,9 @@
 package com.SpringBoot.EcommerceSiteProject.Product.Controller;
 
-import com.SpringBoot.EcommerceSiteProject.Common.ApiResponse;
 import com.SpringBoot.EcommerceSiteProject.DTO.ProductDTO;
-import com.SpringBoot.EcommerceSiteProject.Model.Address;
-import com.SpringBoot.EcommerceSiteProject.Model.Category;
 import com.SpringBoot.EcommerceSiteProject.Model.Product;
 import com.SpringBoot.EcommerceSiteProject.Product.Repository.CategoryRepository;
-import com.SpringBoot.EcommerceSiteProject.Product.Service.CategoryService;
 import com.SpringBoot.EcommerceSiteProject.Product.Service.ProductService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

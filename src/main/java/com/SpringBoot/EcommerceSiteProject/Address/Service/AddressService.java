@@ -1,13 +1,10 @@
 package com.SpringBoot.EcommerceSiteProject.Address.Service;
 
 import com.SpringBoot.EcommerceSiteProject.Address.Repository.AddressRepository;
-import com.SpringBoot.EcommerceSiteProject.Common.ApiResponse;
 import com.SpringBoot.EcommerceSiteProject.Model.Address;
 import com.SpringBoot.EcommerceSiteProject.Model.User;
 import com.SpringBoot.EcommerceSiteProject.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ExpressionException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

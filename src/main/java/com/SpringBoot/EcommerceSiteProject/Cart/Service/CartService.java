@@ -4,6 +4,8 @@ import com.SpringBoot.EcommerceSiteProject.Cart.Repository.CartItemRepository;
 import com.SpringBoot.EcommerceSiteProject.Cart.Repository.CartRepository;
 import com.SpringBoot.EcommerceSiteProject.DTO.CartDTO;
 import com.SpringBoot.EcommerceSiteProject.Model.*;
+import com.SpringBoot.EcommerceSiteProject.Order.Repository.OrderItemRepository;
+import com.SpringBoot.EcommerceSiteProject.Order.Service.OrderService;
 import com.SpringBoot.EcommerceSiteProject.Product.Repository.ProductRepository;
 import com.SpringBoot.EcommerceSiteProject.User.UserRepository;
 import jakarta.transaction.Transactional;
@@ -29,6 +31,12 @@ public class CartService {
     @Autowired
     CartItemRepository cartItemRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private OrderService orderService;
+
     @Transactional
     public void addToCart(CartDTO cartDTO) throws Exception {
 
@@ -42,11 +50,12 @@ public class CartService {
 
         cart = cartRepository.save(cart);
 
-        Product product = productRepository.findByUserId(userId).orElseThrow(() -> new Exception("Product does not exists"));
+        Product product = productRepository.findById(cartDTO.getCartItem().getTempProductId()).orElseThrow(() -> new Exception("Product does not exists"));
 
-        CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), product.getId()).orElse(new CartItem());
+        //CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), product.getId()).orElse(new CartItem());
 
         int quantity = cartDTO.getCartItem().getQuantity();
+        CartItem cartItem = new CartItem();
         cartItem.setCart(cart);
         cartItem.setProduct(product);
         cartItem.setQuantity(quantity);
@@ -101,30 +110,55 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public CartDTO createOrder(Long userId) throws Exception {
-        Cart cart = getCartById(Math.toIntExact(userId));
+    @Transactional
+    public void deleteCartItem(Integer cartIItemId) throws Exception {
+        CartItem cartItem = cartItemRepository.findById(cartIItemId).orElseThrow( () -> new Exception("Cart Item Not Found"));
 
-       // Step 1 - Create Order
+        Cart cart = cartRepository.findById(cartItem.getCart().getId()).orElseThrow( () -> new Exception("Cart Not Found"));
 
-       // orderService.createOrder(cart)
-        //Order order =  Order.builder().orderStatus("PENDING").orderTotal(cart.getTotalPrice()).build();
-       /* List<OrderItem> orderItems = new ArrayList<>();
-        for(CartItem items: cart.getCartItem()){
-            OrderItem orderItem = OrderItem.builder().order(order).itemTotal(items.getItemTotal()).product(items.getProduct())
-                    .build();
-            orderItems.add(orderItem);
-        }
-        orderitemrepo.saveALl(orderItems);*/
+        cartItemRepository.deleteOrderItemById(cartIItemId);
+
+        System.out.println("Cart item deleted successfully");
+
+        List<CartItem> existingItems = cartItemRepository.findByCartId(cart.getId());
+
+        double finalTotal = existingItems.stream().mapToDouble(item -> item.getItemTotal()).sum();
+        double gstTotal = existingItems.stream().mapToDouble(item -> item.getGstAmount()).sum();
+        double finalTotalWithGst = finalTotal + gstTotal;
+
+        cart.setTotalPrice(finalTotal);
+        cart.setGstAmount(gstTotal);
+        cart.setTotalAmountWithGST(finalTotalWithGst);
+        cartRepository.save(cart);
+
+    }
+
+    public void createOrder(Long userId) throws Exception {
+
+        //   Find the cart by user ID
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new Exception("User does not exists"));
+
+        //  Create the order
+
+
+        orderService.createOrder(cart);
+
+
+        // Step 1 - Create Order
 
         //Step 2 - Create payment
 
-        //Step 3 - Update payment to completed
+        //Step 3 - Update order to completed
 
         //Step 4 - Delete Cart Items
 
 
-
     }
+}
+
+
+
+
 
   /*  public void removeItemFromCart(Integer id) throws Exception {
 
@@ -132,9 +166,12 @@ public class CartService {
         if(cartExist){
             cartRepository.deleteById(id);
         }
+        //  update the order with the list of order items
+        order.setOrderItems(orderItems);
+        orderService.updateOrder(order);
 
 
 
     }*/
-}
+
 

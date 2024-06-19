@@ -37,6 +37,6 @@ public class OrderItem {
 
     private Integer quantity;
     private double gstAmount;
-    private double orderedProductPrice;
+    private double productPrice;
     private double itemTotal;
 }

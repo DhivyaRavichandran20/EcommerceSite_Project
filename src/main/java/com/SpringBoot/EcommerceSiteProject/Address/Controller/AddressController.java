@@ -1,11 +1,7 @@
 package com.SpringBoot.EcommerceSiteProject.Address.Controller;
 
 import com.SpringBoot.EcommerceSiteProject.Address.Service.AddressService;
-import com.SpringBoot.EcommerceSiteProject.Common.ApiResponse;
 import com.SpringBoot.EcommerceSiteProject.Model.Address;
-import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 //Logger logger = LoggerFactory.getLogger(AddressController.class);
 @RestController
