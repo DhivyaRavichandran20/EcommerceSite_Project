@@ -21,9 +21,9 @@ public class OrderService {
     @Autowired
     OrderItemRepository orderItemRepository;
 
-    public void createOrder(Cart cart) {
+    public Order createOrder(Cart cart) {
         Order order = Order.builder().orderStatus("PENDING").orderTotal(cart.getTotalPrice())
-                .createdDate(cart.getCreatedDate()).gstAmount(cart.getGstAmount())
+                .gstAmount(cart.getGstAmount())
                 .totalAmountWithGST(cart.getTotalAmountWithGST()).user(cart.getUser()).build();
 
         orderRepository.save(order);
@@ -42,12 +42,18 @@ public class OrderService {
 
         //  Save Order Items using order service
         orderItemRepository.saveAll(orderItems);
+        return order;
 
     }
 
     public void saveOrderItems(List<OrderItem> orderItems) {
         orderItemRepository.saveAll(orderItems);
 
+    }
+
+    public void completeOrder(Order order){
+        order.setOrderStatus("Completed");
+        orderRepository.save(order);
     }
 
     //public void updateOrder(Order order) {

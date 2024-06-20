@@ -58,9 +58,7 @@ public class CartController {
         cartService.createOrder(userId);
         return  "success";
 
-    //public ResponseEntity<Order> createOrder(@PathVariable Long userId ) {
-       // Order order = cartService.createOrder(userId);
-       // return ResponseEntity.ok(order);
+
     }
 
 

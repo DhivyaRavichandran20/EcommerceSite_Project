@@ -34,9 +34,9 @@ public class    Cart {
 
     private Double totalPrice = 0.0;
 
-    private Date createdDate;
-
     private Double gstAmount = 0.0;
 
     private Double totalAmountWithGST = 0.0;
+
+
 }

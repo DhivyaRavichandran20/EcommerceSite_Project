@@ -6,6 +6,7 @@ import com.SpringBoot.EcommerceSiteProject.DTO.CartDTO;
 import com.SpringBoot.EcommerceSiteProject.Model.*;
 import com.SpringBoot.EcommerceSiteProject.Order.Repository.OrderItemRepository;
 import com.SpringBoot.EcommerceSiteProject.Order.Service.OrderService;
+import com.SpringBoot.EcommerceSiteProject.Payment.Service.PaymentService;
 import com.SpringBoot.EcommerceSiteProject.Product.Repository.ProductRepository;
 import com.SpringBoot.EcommerceSiteProject.User.UserRepository;
 import jakarta.transaction.Transactional;
@@ -36,6 +37,9 @@ public class CartService {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Transactional
     public void addToCart(CartDTO cartDTO) throws Exception {
@@ -111,12 +115,12 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCartItem(Integer cartIItemId) throws Exception {
-        CartItem cartItem = cartItemRepository.findById(cartIItemId).orElseThrow( () -> new Exception("Cart Item Not Found"));
+    public void deleteCartItem(Integer cartItemId) throws Exception {
+        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow( () -> new Exception("Cart Item Not Found"));
 
         Cart cart = cartRepository.findById(cartItem.getCart().getId()).orElseThrow( () -> new Exception("Cart Not Found"));
 
-        cartItemRepository.deleteOrderItemById(cartIItemId);
+        cartItemRepository.deleteOrderItemById(cartItemId);
 
         System.out.println("Cart item deleted successfully");
 
@@ -133,6 +137,7 @@ public class CartService {
 
     }
 
+    @Transactional
     public void createOrder(Long userId) throws Exception {
 
         //   Find the cart by user ID
@@ -141,12 +146,17 @@ public class CartService {
         //  Create the order
 
 
-        orderService.createOrder(cart);
+         Order order = orderService.createOrder(cart);
+
+         paymentService.createPayment(order);
+
+         orderService.completeOrder(order);
+
 
 
         // Step 1 - Create Order
 
-        //Step 2 - Create payment
+        //Step 2 - Create payment(order)
 
         //Step 3 - Update order to completed
 
@@ -160,18 +170,10 @@ public class CartService {
 
 
 
-  /*  public void removeItemFromCart(Integer id) throws Exception {
-
-        boolean cartExist = cartRepository.existsById(id);
-        if(cartExist){
-            cartRepository.deleteById(id);
-        }
-        //  update the order with the list of order items
-        order.setOrderItems(orderItems);
-        orderService.updateOrder(order);
 
 
 
-    }*/
+
+
 
 

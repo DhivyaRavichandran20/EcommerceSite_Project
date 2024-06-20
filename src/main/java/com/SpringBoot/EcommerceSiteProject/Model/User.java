@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,9 @@ public class User {
 
     @OneToMany(mappedBy = "user",cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
     private List<Order> order;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Payment> payment = new ArrayList<>();
 
     public User(){
 

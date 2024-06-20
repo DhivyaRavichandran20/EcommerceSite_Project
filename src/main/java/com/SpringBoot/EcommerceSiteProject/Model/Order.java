@@ -30,18 +30,27 @@ public class Order {
 
     @Transient
     private Long tempsUserId;
-
-    private Date createdDate;
     private Double orderTotal;
     private String orderStatus;
     private Double gstAmount ;
-
     private Double totalAmountWithGST ;
+
+   /* @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "order_date", nullable = false, updatable = false)
+    private Date orderDate;
+
+    @PrePersist
+    protected void onCreate() {
+        this.orderDate = new Date();
+    }*/
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "order",cascade = { CascadeType.PERSIST,CascadeType.MERGE},orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    private List<Payment> payments = new ArrayList<>();
 
 
 }
