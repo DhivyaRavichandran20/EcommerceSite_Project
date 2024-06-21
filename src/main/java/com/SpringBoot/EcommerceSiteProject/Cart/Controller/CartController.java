@@ -54,7 +54,7 @@ public class CartController {
 
     }*/
     @PostMapping("/checkout")
-    public String createOrder(@RequestParam Long userId, @RequestParam boolean payment) throws Exception {
+    public String createOrder(@RequestParam Long userId) throws Exception {
         cartService.createOrder(userId);
         return  "success";
 

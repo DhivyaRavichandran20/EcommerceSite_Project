@@ -27,7 +27,6 @@ public class Payment {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-
    // @OneToMany(mappedBy = "payment")
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)

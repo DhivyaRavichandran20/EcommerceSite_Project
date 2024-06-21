@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -48,6 +49,17 @@ public class OrderService {
 
     public void saveOrderItems(List<OrderItem> orderItems) {
         orderItemRepository.saveAll(orderItems);
+
+    }
+
+    public Order findOrder(Long userId, Integer orderId) throws Exception {
+        Optional<Order> maybeOrder = orderRepository.findByUserIdAndId(userId, orderId);
+
+        if(maybeOrder.isPresent()){
+            return maybeOrder.get();
+        }else{
+            throw new Exception("Order not found");
+        }
 
     }
 

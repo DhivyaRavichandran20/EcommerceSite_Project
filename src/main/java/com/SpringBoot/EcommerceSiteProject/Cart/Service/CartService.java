@@ -148,9 +148,11 @@ public class CartService {
 
          Order order = orderService.createOrder(cart);
 
-         paymentService.createPayment(order);
+        System.out.println("order completed successfully");
 
-         orderService.completeOrder(order);
+
+
+        // cartRepository.delete(cart);
 
 
 
@@ -162,6 +164,12 @@ public class CartService {
 
         //Step 4 - Delete Cart Items
 
+
+    }
+
+    public void deleteCart(Long userId) throws Exception {
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow( () -> new Exception("Cart Not Found"));
+        cartRepository.delete(cart);
 
     }
 }
